@@ -31,7 +31,12 @@ class Contract(Base):
     h3_cell: Mapped[str] = mapped_column(String(16), nullable=False, index=True)
 
     metric: Mapped[ContractMetric] = mapped_column(
-        Enum(ContractMetric, name="contract_metric"), nullable=False
+        Enum(
+            ContractMetric,
+            name="contract_metric",
+            values_callable=lambda obj: [e.value for e in obj],
+        ),
+        nullable=False,
     )
     threshold: Mapped[float] = mapped_column(Float, nullable=False)
     unit: Mapped[str] = mapped_column(String(16), nullable=False)  # "mm", "m/s"

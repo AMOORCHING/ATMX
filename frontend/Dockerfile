@@ -4,6 +4,10 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 COPY . .
+
+# Vite inlines VITE_* env vars at build time, so we need them as build args.
+ARG VITE_MAPBOX_TOKEN=""
+ENV VITE_MAPBOX_TOKEN=$VITE_MAPBOX_TOKEN
 RUN npm run build
 
 FROM nginx:alpine

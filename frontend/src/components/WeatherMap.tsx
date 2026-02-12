@@ -24,7 +24,7 @@ export interface TradeFlash {
 }
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || "";
-const H3_RESOLUTION = 7;
+const H3_RESOLUTION = 4;
 
 // NOAA NEXRAD radar composite tiles from Iowa Environmental Mesonet.
 const RADAR_TILES = [
@@ -47,11 +47,21 @@ function probToColor(prob: number): string {
 }
 
 /**
+ * Normalize a potentially truncated H3 cell ID to a full 15-character index.
+ * The backend stores truncated IDs (e.g. "872a1070b") from ticker parsing;
+ * h3-js needs the full form (e.g. "872a1070bffffff").
+ */
+function normalizeH3Cell(cellId: string): string {
+  if (cellId.length >= 15) return cellId;
+  return cellId.padEnd(15, "f");
+}
+
+/**
  * Convert H3 cell boundary to GeoJSON ring coordinates.
  * h3-js returns [lat, lng] pairs; GeoJSON needs [lng, lat].
  */
 function cellToGeoJSONRing(cellId: string): number[][] {
-  const boundary = cellToBoundary(cellId);
+  const boundary = cellToBoundary(normalizeH3Cell(cellId));
   const coords = boundary.map(([lat, lng]) => [lng, lat]);
   coords.push(coords[0]); // Close the ring.
   return coords;
@@ -69,7 +79,7 @@ export default function WeatherMap({
     { cellId: string; opacity: number; key: number }[]
   >([]);
 
-  // ── Group markets by H3 cell ──────────────────────────────────────────────
+  // ── Group markets by H3 cell (normalized to full 15-char IDs) ────────────
   const cellData = useMemo(() => {
     const cells = new Map<
       string,
@@ -77,13 +87,14 @@ export default function WeatherMap({
     >();
     for (const market of markets) {
       if (!market.h3_cell_id) continue;
+      const cellId = normalizeH3Cell(market.h3_cell_id);
       const prob = parseFloat(market.price_yes) || 0.5;
-      const existing = cells.get(market.h3_cell_id);
+      const existing = cells.get(cellId);
       if (existing) {
         existing.maxProb = Math.max(existing.maxProb, prob);
         existing.marketCount++;
       } else {
-        cells.set(market.h3_cell_id, { maxProb: prob, marketCount: 1 });
+        cells.set(cellId, { maxProb: prob, marketCount: 1 });
       }
     }
     return cells;
@@ -196,7 +207,7 @@ export default function WeatherMap({
   // ── Click handler: determine H3 cell ──────────────────────────────────────
   const handleClick = useCallback(
     (event: MapLayerMouseEvent) => {
-      // Check if clicked on an H3 polygon feature.
+      // 1. Primary: use features from interactiveLayerIds query.
       const features = event.features;
       if (features?.length) {
         const cellId = features[0].properties?.cellId;
@@ -206,17 +217,42 @@ export default function WeatherMap({
         }
       }
 
-      // Convert click lat/lng to H3 cell.
+      // 2. Fallback: manually query rendered features at click point.
+      const map = mapRef.current?.getMap();
+      if (map) {
+        try {
+          const queried = map.queryRenderedFeatures(event.point, {
+            layers: ["h3-fill"],
+          });
+          if (queried?.length) {
+            const cellId = queried[0].properties?.cellId;
+            if (cellId) {
+              onCellSelect(cellId);
+              return;
+            }
+          }
+        } catch {
+          // queryRenderedFeatures can throw if layer not yet loaded.
+        }
+      }
+
+      // 3. Last resort: convert click lat/lng to H3 cell.
+      //    Always select the cell — let the panel show "no markets" if empty.
       try {
         const { lng, lat } = event.lngLat;
         const cell = latLngToCell(lat, lng, H3_RESOLUTION);
-        onCellSelect(cellData.has(cell) ? cell : null);
+        onCellSelect(cell);
       } catch {
         onCellSelect(null);
       }
     },
-    [onCellSelect, cellData]
+    [onCellSelect]
   );
+
+  // ── Cursor style: pointer on hexagons ────────────────────────────────────
+  const [cursor, setCursor] = useState("grab");
+  const handleMouseEnter = useCallback(() => setCursor("pointer"), []);
+  const handleMouseLeave = useCallback(() => setCursor("grab"), []);
 
   return (
     <div className="map-container">
@@ -231,7 +267,10 @@ export default function WeatherMap({
         mapStyle="mapbox://styles/mapbox/dark-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
         onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         interactiveLayerIds={["h3-fill"]}
+        cursor={cursor}
       >
         <NavigationControl position="top-right" />
 

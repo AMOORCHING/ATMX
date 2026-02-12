@@ -19,12 +19,28 @@ interface HedgingToolProps {
 interface HedgeSuggestion {
   market: Market;
   h3Cell: string;
-  distance: number; // Ring distance from center.
+  distance: number; // Distance in km from center.
   estimatedCost: number;
   label: string;
 }
 
-const H3_RESOLUTION = 7;
+const H3_RESOLUTION = 4;
+
+/** Haversine distance in km between two [lat, lng] points. */
+function haversineKm(
+  [lat1, lng1]: [number, number],
+  [lat2, lng2]: [number, number]
+): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
 
 /**
  * HedgingTool: enter an address → geocode to H3 cells → suggest a basket
@@ -77,6 +93,7 @@ export default function HedgingTool({
 
       const [lng, lat] = result.center;
       const centerCell = latLngToCell(lat, lng, H3_RESOLUTION);
+      const centerLatLng: [number, number] = [lat, lng];
 
       setGeocodeResult({
         placeName: result.placeName,
@@ -84,43 +101,82 @@ export default function HedgingTool({
         centerCell,
       });
 
-      // Get disk of cells around the center (k=2 gives ~19 cells).
-      const disk = gridDisk(centerCell, 2);
-      onHighlightCells(disk);
+      // 1. Try gridDisk at increasing radii (k=2, then k=4) to find local markets.
+      let found: HedgeSuggestion[] = [];
+      let diskCells: string[] = [];
 
-      // Find markets in these cells.
-      const found: HedgeSuggestion[] = [];
-      for (const cell of disk) {
-        const cellMarkets = marketsByCell.get(cell);
-        if (!cellMarkets) continue;
+      for (const k of [2, 4]) {
+        const disk = gridDisk(centerCell, k);
+        diskCells = disk;
 
-        // Compute ring distance from center.
-        const [centerLat, centerLng] = cellToLatLng(centerCell);
-        const [cellLat, cellLng] = cellToLatLng(cell);
-        const distance = Math.sqrt(
-          (centerLat - cellLat) ** 2 + (centerLng - cellLng) ** 2
-        );
+        for (const cell of disk) {
+          const cellMarkets = marketsByCell.get(cell);
+          if (!cellMarkets) continue;
 
-        for (const market of cellMarkets) {
-          const parsed = parseTicker(market.contract_id);
-          // Prefer precipitation markets for hedging demo.
-          const qYes = parseFloat(market.q_yes) || 0;
-          const qNo = parseFloat(market.q_no) || 0;
-          const b = parseFloat(market.b) || 100;
-          const qty = 10; // Suggest 10-share hedge.
-          const estCost = tradeCost(qYes, qNo, b, qty, "YES");
+          const cellLatLng = cellToLatLng(cell) as [number, number];
+          const distKm = haversineKm(centerLatLng, cellLatLng);
 
-          found.push({
-            market,
-            h3Cell: cell,
-            distance,
-            estimatedCost: estCost,
-            label: parsed
-              ? `${contractTypeLabel(parsed.type)} ${formatThreshold(parsed.threshold)}`
-              : market.contract_id,
-          });
+          for (const market of cellMarkets) {
+            const parsed = parseTicker(market.contract_id);
+            const qYes = parseFloat(market.q_yes) || 0;
+            const qNo = parseFloat(market.q_no) || 0;
+            const b = parseFloat(market.b) || 100;
+            const qty = 10;
+            const estCost = tradeCost(qYes, qNo, b, qty, "YES");
+
+            found.push({
+              market,
+              h3Cell: cell,
+              distance: distKm,
+              estimatedCost: estCost,
+              label: parsed
+                ? `${contractTypeLabel(parsed.type)} ${formatThreshold(parsed.threshold)}`
+                : market.contract_id,
+            });
+          }
         }
+
+        if (found.length > 0) break; // Found markets in this radius.
       }
+
+      // 2. If still nothing, find the nearest markets from ALL available markets.
+      if (found.length === 0 && markets.length > 0) {
+        const allWithDist: HedgeSuggestion[] = [];
+        for (const market of markets) {
+          if (!market.h3_cell_id) continue;
+          try {
+            const cellLatLng = cellToLatLng(market.h3_cell_id) as [number, number];
+            const distKm = haversineKm(centerLatLng, cellLatLng);
+            const parsed = parseTicker(market.contract_id);
+            const qYes = parseFloat(market.q_yes) || 0;
+            const qNo = parseFloat(market.q_no) || 0;
+            const b = parseFloat(market.b) || 100;
+            const qty = 10;
+            const estCost = tradeCost(qYes, qNo, b, qty, "YES");
+
+            allWithDist.push({
+              market,
+              h3Cell: market.h3_cell_id,
+              distance: distKm,
+              estimatedCost: estCost,
+              label: parsed
+                ? `${contractTypeLabel(parsed.type)} ${formatThreshold(parsed.threshold)}`
+                : market.contract_id,
+            });
+          } catch {
+            // Skip invalid cells.
+          }
+        }
+
+        allWithDist.sort((a, b) => a.distance - b.distance);
+        found = allWithDist.slice(0, 5);
+
+        // Highlight the cells of found markets plus the search area.
+        const foundCells = [...new Set(found.map((s) => s.h3Cell))];
+        diskCells = [...gridDisk(centerCell, 2), ...foundCells];
+      }
+
+      onHighlightCells(diskCells);
 
       // Sort by distance from center, take top 5.
       found.sort((a, b) => a.distance - b.distance);
@@ -128,7 +184,7 @@ export default function HedgingTool({
 
       if (found.length === 0) {
         setError(
-          "No active markets found near this location. Markets exist in select US metro areas."
+          "No active markets found. Markets exist in select US metro areas."
         );
       }
     } catch (err) {
@@ -136,7 +192,7 @@ export default function HedgingTool({
     } finally {
       setLoading(false);
     }
-  }, [address, mapboxToken, marketsByCell, onHighlightCells]);
+  }, [address, mapboxToken, markets, marketsByCell, onHighlightCells]);
 
   const totalCost = useMemo(
     () => suggestions.reduce((sum, s) => sum + s.estimatedCost, 0),
@@ -211,6 +267,11 @@ export default function HedgingTool({
                   </span>
                   <span>
                     Cost: <strong>${s.estimatedCost.toFixed(2)}</strong>
+                  </span>
+                  <span>
+                    {s.distance < 1
+                      ? "< 1 km"
+                      : `~${Math.round(s.distance)} km`}
                   </span>
                 </div>
               </div>

@@ -57,13 +57,12 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_MAPBOX_TOKEN: ${VITE_MAPBOX_TOKEN:-${MAPBOX_TOKEN:-}}
     ports:
       - "3000:3000"
-    environment:
-      VITE_MAPBOX_TOKEN: ${MAPBOX_TOKEN:-}
-      VITE_MARKET_ENGINE_URL: http://market-engine:8080
-      VITE_SETTLEMENT_ORACLE_URL: http://settlement-oracle:8000
     depends_on:
       - market-engine
       - settlement-oracle

@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  // Load .env from the repository root so VITE_MAPBOX_TOKEN is available.
+  envDir: '..',
   server: {
     port: 3000,
     proxy: {
