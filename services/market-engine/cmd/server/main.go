@@ -17,6 +17,7 @@ import (
 	"github.com/shopspring/decimal"
 
 	"github.com/atmx/market-engine/internal/correlation"
+	"github.com/atmx/market-engine/internal/metrics"
 	"github.com/atmx/market-engine/internal/store"
 	"github.com/atmx/market-engine/internal/trade"
 )
@@ -87,6 +88,7 @@ func main() {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Timeout(30 * time.Second))
+	r.Use(metrics.Middleware)
 
 	// CORS middleware for frontend cross-origin requests.
 	r.Use(func(next http.Handler) http.Handler {
@@ -106,6 +108,9 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write([]byte(`{"status":"ok","service":"market-engine"}`))
 	})
+
+	// Prometheus metrics endpoint.
+	r.Handle("/metrics", metrics.Handler())
 
 	r.Route("/api/v1", func(r chi.Router) {
 		// WebSocket endpoint for real-time price updates.

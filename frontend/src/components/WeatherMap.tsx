@@ -14,6 +14,7 @@ interface WeatherMapProps {
   selectedCell: string | null;
   onCellSelect: (cellId: string | null) => void;
   tradeFlashes: TradeFlash[];
+  highlightCells?: string[];
 }
 
 export interface TradeFlash {
@@ -61,6 +62,7 @@ export default function WeatherMap({
   selectedCell,
   onCellSelect,
   tradeFlashes,
+  highlightCells = [],
 }: WeatherMapProps) {
   const mapRef = useRef<MapRef>(null);
   const [activeFlashes, setActiveFlashes] = useState<
@@ -168,6 +170,29 @@ export default function WeatherMap({
     return { type: "FeatureCollection" as const, features };
   }, [activeFlashes]);
 
+  // ── Layer 4: Hedging Tool Highlight Overlay ────────────────────────────────
+  const highlightGeoJSON = useMemo(() => {
+    if (highlightCells.length === 0) {
+      return { type: "FeatureCollection" as const, features: [] as GeoJSON.Feature[] };
+    }
+    const features: GeoJSON.Feature[] = [];
+    for (const cellId of highlightCells) {
+      try {
+        features.push({
+          type: "Feature",
+          properties: { cellId },
+          geometry: {
+            type: "Polygon",
+            coordinates: [cellToGeoJSONRing(cellId)],
+          },
+        });
+      } catch {
+        // Skip invalid cells.
+      }
+    }
+    return { type: "FeatureCollection" as const, features };
+  }, [highlightCells]);
+
   // ── Click handler: determine H3 cell ──────────────────────────────────────
   const handleClick = useCallback(
     (event: MapLayerMouseEvent) => {
@@ -269,6 +294,30 @@ export default function WeatherMap({
             }}
           />
         </Source>
+
+        {/* ── Layer 4: Hedging Tool Coverage Overlay ──────────────────── */}
+        {highlightCells.length > 0 && (
+          <Source id="hedge-highlight" type="geojson" data={highlightGeoJSON}>
+            <Layer
+              id="hedge-fill"
+              type="fill"
+              paint={{
+                "fill-color": "#60a5fa",
+                "fill-opacity": 0.25,
+              }}
+            />
+            <Layer
+              id="hedge-outline"
+              type="line"
+              paint={{
+                "line-color": "#3b82f6",
+                "line-width": 2,
+                "line-dasharray": [2, 2],
+                "line-opacity": 0.8,
+              }}
+            />
+          </Source>
+        )}
       </MapGL>
 
       {/* ── Map Legend ────────────────────────────────────────────────────── */}

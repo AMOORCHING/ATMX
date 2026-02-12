@@ -7,8 +7,11 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o /market-engine ./cmd/server
 
 FROM alpine:3.19
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add ca-certificates postgresql-client
 COPY --from=builder /market-engine /market-engine
+COPY migrations/ /migrations/
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 8080
-ENTRYPOINT ["/market-engine"]
+ENTRYPOINT ["/entrypoint.sh"]

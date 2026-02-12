@@ -105,6 +105,7 @@ function App() {
             if (cell) setPanelMode("markets");
           }}
           tradeFlashes={tradeFlashes}
+          highlightCells={highlightCells}
         />
 
         {panelMode === "markets" ? (
@@ -125,10 +126,6 @@ function App() {
         )}
       </main>
 
-      {/* Expose highlighted cells (used for potential map overlay) */}
-      {highlightCells.length > 0 && (
-        <div style={{ display: "none" }} data-highlight={highlightCells.join(",")} />
-      )}
     </div>
   );
 }

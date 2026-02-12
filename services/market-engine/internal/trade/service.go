@@ -18,6 +18,7 @@ import (
 	"github.com/atmx/market-engine/internal/contract"
 	"github.com/atmx/market-engine/internal/correlation"
 	"github.com/atmx/market-engine/internal/lmsr"
+	"github.com/atmx/market-engine/internal/metrics"
 	"github.com/atmx/market-engine/internal/model"
 	"github.com/atmx/market-engine/internal/store"
 )
@@ -128,6 +129,8 @@ func (s *Service) CreateMarket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	metrics.ActiveMarkets.Inc()
+
 	slog.Info("market created",
 		"id", market.ID,
 		"contract", req.ContractID,
@@ -176,6 +179,8 @@ func (s *Service) GetPrice(w http.ResponseWriter, r *http.Request) {
 // ExecuteTrade handles POST /api/v1/trade
 // Executes against LMSR, returns fill price and updated position.
 func (s *Service) ExecuteTrade(w http.ResponseWriter, r *http.Request) {
+	tradeStart := time.Now()
+
 	var req TradeRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, "invalid request body", http.StatusBadRequest)
@@ -235,6 +240,7 @@ func (s *Service) ExecuteTrade(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := s.limiter.CheckLimit(market.H3CellID, exposureDelta, exposures); err != nil {
+		metrics.PositionLimitRejections.Inc()
 		writeError(w, err.Error(), http.StatusConflict)
 		return
 	}
@@ -340,6 +346,11 @@ func (s *Service) ExecuteTrade(w http.ResponseWriter, r *http.Request) {
 			Quantity:   req.Quantity.String(),
 		})
 	}
+
+	// Record trade metrics.
+	metrics.TradesTotal.WithLabelValues(req.Side).Inc()
+	metrics.TradeLatency.WithLabelValues(req.Side).Observe(time.Since(tradeStart).Seconds())
+	metrics.MarketVolume.WithLabelValues(market.ID, req.Side).Add(req.Quantity.Abs().InexactFloat64())
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
