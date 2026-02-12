@@ -1,6 +1,6 @@
 # atmx
 
-Weather derivative trading platform. Trade binary contracts on weather outcomes, settled automatically against official NOAA observations.
+is a Weather derivative trading platform. Trade binary contracts on weather outcomes, settled automatically against official NOAA observations.
 
 ## Architecture
 
