@@ -16,19 +16,19 @@ This document explains *why* the system is built the way it is — the tradeoffs
                            │
               ┌────────────┼────────────┐
               ▼                         ▼
-     ┌────────────────┐      ┌──────────────────┐
-     │  Market Engine  │      │ Settlement Oracle │
-     │   (Go / LMSR)  │      │  (Python / NOAA)  │
-     └───────┬────────┘      └────────┬──────────┘
-             │     ┌───────┐          │
-             ├─────│ Redis │          │
-             │     └───────┘          │
-             └──────────┬─────────────┘
-                        ▼
-                ┌───────────────┐
-                │  PostgreSQL   │
-                │   + PostGIS   │
-                └───────────────┘
+      ┌────────────────┐      ┌──────────────────┐
+      │  Market Engine │      │ Settlement Oracle │
+      │   (Go / LMSR)  │      │  (Python / NOAA)  │
+      └───────┬────────┘      └────────┬──────────┘
+              │     ┌───────┐          │
+              ├─────│ Redis │          │
+              │     └───────┘          │
+              └────────────┬───────────┘
+                           ▼
+                   ┌───────────────┐
+                   │  PostgreSQL   │
+                   │   + PostGIS   │
+                   └───────────────┘
 ```
 
 ## Services
