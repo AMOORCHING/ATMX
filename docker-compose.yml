@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: atmx
+      POSTGRES_PASSWORD: atmx
+      POSTGRES_DB: atmx
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atmx -d atmx"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  settlement-oracle:
+    build: ./services/settlement-oracle
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://atmx:atmx@db:5432/atmx
+      SYNC_DATABASE_URL: postgresql://atmx:atmx@db:5432/atmx
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  market-engine:
+    build: ./services/market-engine
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      DATABASE_URL: postgres://atmx:atmx@db:5432/atmx?sslmode=disable
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_MAPBOX_TOKEN: ${MAPBOX_TOKEN:-}
+      VITE_MARKET_ENGINE_URL: http://market-engine:8080
+      VITE_SETTLEMENT_ORACLE_URL: http://settlement-oracle:8000
+    depends_on:
+      - market-engine
+      - settlement-oracle
+
+volumes:
+  pgdata:
