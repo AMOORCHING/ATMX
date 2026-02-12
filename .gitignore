@@ -1,0 +1,11 @@
+.env.example
+.env
+.venv
+.pytest_cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz'
+frontend/node_modules
