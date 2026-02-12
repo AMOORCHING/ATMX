@@ -4,7 +4,7 @@
 
 **atmx** is a weather derivative trading platform that combines real-time NOAA weather data with prediction market mechanics. Users trade binary contracts on weather outcomes (e.g., "Will precipitation in this area exceed 25mm in the next 24 hours?"), and contracts are settled automatically against official ASOS/AWOS observations.
 
-This document explains *why* the system is built the way it is — the tradeoffs behind each technical decision — not just what it does.
+This document explains technical decisions and trade-offs
 
 ## Architecture
 
@@ -93,7 +93,7 @@ Thin routing layer for unified auth, rate limiting, and CORS when deploying to p
 
 ## Why LMSR Over CPMM or a Full Order Book
 
-This is the single most important design decision in the system. Three options were evaluated:
+Three options were evaluated:
 
 ### Option 1: Full Continuous-Double-Auction Order Book
 Traditional exchanges (CME, Kalshi) use a limit order book (LOB). Pros: familiar, price discovery is organic, zero liquidity subsidy. Cons: **cold-start problem** — a new weather market on a single H3 cell may see only a handful of traders per day. With thin order books, spreads blow out to 30–40¢ on a $1 contract, making the market unusable. You need an active market-making desk to seed liquidity, which requires capital and a risk engine.
@@ -128,7 +128,7 @@ This is the same path Kalshi and Polymarket followed (Polymarket started with an
 
 ## Why H3 Resolution 7
 
-H3 resolution 7 gives hexagons of ~5.16 km² (edge length ~1.22 km). This was not arbitrary — it's the Goldilocks zone for weather derivatives.
+H3 resolution 7 gives hexagons of ~5.16 km² (edge length ~1.22 km), which is a Goldilocks zone for weather derivatives.
 
 ### What breaks at resolution 6 (~36 km²)
 
