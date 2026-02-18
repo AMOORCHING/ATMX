@@ -1,0 +1,19 @@
+{$DOMAIN:localhost} {
+	reverse_proxy /health risk-api:8001
+	reverse_proxy /docs* risk-api:8001
+	reverse_proxy /redoc* risk-api:8001
+	reverse_proxy /openapi.json risk-api:8001
+	reverse_proxy /v1/* risk-api:8001
+	reverse_proxy /admin/* risk-api:8001
+
+	header {
+		-Server
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

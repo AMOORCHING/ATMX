@@ -1,0 +1,27 @@
+# Reverse proxy for the ATMX Risk API with automatic HTTPS.
+#
+# Replace api.yourdomain.com with your actual domain.
+# Caddy handles TLS certificate provisioning via Let's Encrypt automatically.
+#
+# Usage:
+#   1. Point your domain's DNS A record to the server IP
+#   2. Install Caddy: https://caddyserver.com/docs/install
+#   3. Run: caddy run --config /path/to/Caddyfile
+#
+# Or use the caddy Docker image alongside the compose stack — see deploy guide.
+
+api.yourdomain.com {
+	reverse_proxy localhost:8001
+
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	log {
+		output file /var/log/caddy/access.log
+		format json
+	}
+}
