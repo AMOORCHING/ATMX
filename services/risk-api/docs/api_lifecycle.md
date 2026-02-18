@@ -4,6 +4,8 @@
 
 Every `/v1/*` request requires: `Authorization: Bearer atmx_sk_...`
 
+> **See also:** [Case Studies](../../../docs/case_studies.md) — 10 retroactive walkthroughs using real NOAA ASOS data from actual outdoor events.
+
 ---
 
 ## 0. Issue an API Key (operator only)

@@ -188,6 +188,7 @@ Disputed contracts hold funds in escrow until manual resolution or re-settlement
 - Tampering with any record breaks the chain for all subsequent records
 - Full evidence payloads (raw observations, aggregation details) stored with each settlement
 - All trades logged with timestamps, trader IDs, and execution prices
+- See [Case Studies](case_studies.md) for 10 retroactive examples with real ASOS data and hash-chained settlement records
 
 ---
 

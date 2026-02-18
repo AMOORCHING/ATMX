@@ -113,6 +113,9 @@ python scripts/seed_contracts.py
 
 # Run historical backtesting (30 events against real NOAA data)
 python scripts/backtest_settlement.py
+
+# Generate case studies (10 retroactive events with real ASOS data)
+python scripts/generate_case_studies.py
 ```
 
 ## Testing
@@ -145,3 +148,4 @@ Every push to `main` and every pull request triggers GitHub Actions:
 ## Documentation
 
 - [Design Document](docs/design.md) — Why LMSR over CPMM, why H3 resolution 7, CFTC awareness, hybrid order book migration path, and 6-month roadmap
+- [Case Studies](docs/case_studies.md) — 10 retroactive walkthroughs using real NOAA ASOS data from actual outdoor events (concerts, festivals, fireworks)
