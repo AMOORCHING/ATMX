@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ATMX Widget — Embeddable Weather Protection</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: "SF Mono", "Fira Code", Consolas, Monaco, monospace;
+      --bg: #f5f6f8;
+      --white: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --text-2: #6b7280;
+      --text-3: #9ca3af;
+      --accent: #4f7fff;
+      --radius: 16px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.04);
+    }
+
+    html {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 72px 24px 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 0%, rgba(79,127,255,0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 100%, rgba(139,92,246,0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero > * { position: relative; }
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 5px 14px;
+      margin-bottom: 20px;
+    }
+    .hero__badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+    .hero__title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .hero__title span {
+      background: linear-gradient(135deg, #4f7fff, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero__sub {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 540px;
+      margin: 0 auto 28px;
+    }
+    .hero__code {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 8px 18px;
+    }
+    .hero__code strong {
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* ── Sections ── */
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .section {
+      padding: 56px 0;
+    }
+    .section__label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .section__title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .section__sub {
+      color: var(--text-2);
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+      max-width: 520px;
+    }
+
+    /* ── Checkout Mock ── */
+    .checkout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 800px) {
+      .checkout { grid-template-columns: 1fr; }
+    }
+
+    .checkout-main {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+    }
+    .checkout-main__title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+    .event-banner {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+    .event-banner__emoji {
+      font-size: 2.5rem;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+    }
+    .event-banner__info {
+      color: #fff;
+    }
+    .event-banner__name {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+    .event-banner__details {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .info-item__label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-3);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .info-item__value {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .checkout-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .order-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+    .order-card__title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding: 5px 0;
+    }
+    .order-row--label { color: var(--text-2); }
+    .order-row--total {
+      font-weight: 700;
+      font-size: 1rem;
+      padding-top: 12px;
+      margin-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .order-row--total .order-row--green {
+      color: #16a34a;
+    }
+    .order-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 200ms ease;
+      font-family: var(--font);
+    }
+    .order-btn:hover {
+      background: #3b6bee;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(79,127,255,0.3);
+    }
+    .order-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-3);
+    }
+
+    /* ── Code Blocks ── */
+    .code-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 700px) {
+      .code-grid { grid-template-columns: 1fr; }
+    }
+    .code-card {
+      background: #1a1a2e;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .code-card__header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .code-card__dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .code-card__dot--red { background: #ef4444; }
+    .code-card__dot--yellow { background: #f59e0b; }
+    .code-card__dot--green { background: #22c55e; }
+    .code-card__label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      font-weight: 500;
+      margin-left: auto;
+    }
+    .code-card__body {
+      padding: 16px;
+      overflow-x: auto;
+    }
+    .code-card__body pre {
+      margin: 0;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.8);
+      white-space: pre;
+    }
+    .code-card__body .hl-tag { color: #ef4444; }
+    .code-card__body .hl-attr { color: #f59e0b; }
+    .code-card__body .hl-str { color: #22c55e; }
+    .code-card__body .hl-kw { color: #c084fc; }
+    .code-card__body .hl-fn { color: #60a5fa; }
+    .code-card__body .hl-cmt { color: rgba(255,255,255,0.3); }
+    .code-card__body .hl-prop { color: #67e8f9; }
+
+    /* ── Theme Grid ── */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 700px) {
+      .theme-grid { grid-template-columns: 1fr; }
+    }
+    .theme-card {
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 1px solid var(--border);
+    }
+    .theme-card--light {
+      background: #f9fafb;
+    }
+    .theme-card--dark {
+      background: #0b0b12;
+      border-color: #2a2a3e;
+    }
+    .theme-card__label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .theme-card--light .theme-card__label { color: var(--text-2); }
+    .theme-card--dark .theme-card__label { color: #9494aa; }
+
+    /* ── Event Log ── */
+    .log-card {
+      background: #1a1a2e;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .log-card__header {
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .log-card__header-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+    }
+    #event-log {
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.6);
+      min-height: 80px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .log-entry { animation: fadeIn 0.3s ease; }
+    .log-entry .log-time { color: rgba(255,255,255,0.3); }
+    .log-entry .log-event { color: #60a5fa; }
+    .log-entry .log-data { color: #22c55e; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Footer ── */
+    .demo-footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-3);
+    }
+    .demo-footer strong {
+      color: var(--text-2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Hero ═══ -->
+  <header class="hero">
+    <div class="hero__badge">
+      <span class="hero__badge-dot"></span>
+      Embeddable Widget v0.1
+    </div>
+    <h1 class="hero__title">Weather Protection<br/>for <span>Any Checkout</span></h1>
+    <p class="hero__sub">
+      One script tag. Live risk pricing. Contract creation on toggle.
+      Drop it into any page and weather protection appears instantly.
+    </p>
+    <div class="hero__code">
+      &lt;script src="<strong>cdn.atmx.io/widget/v1/atmx.js</strong>"&gt;&lt;/script&gt;
+    </div>
+  </header>
+
+  <!-- ═══ Mock Checkout ═══ -->
+  <div class="container">
+    <div class="section">
+      <div class="section__label">Live Demo</div>
+      <h2 class="section__title">Embedded in a Checkout Flow</h2>
+      <p class="section__sub">
+        This simulates a real ticket platform. The ATMX widget sits in the order sidebar —
+        showing live risk data and letting the customer toggle on protection.
+      </p>
+
+      <div class="checkout">
+        <div class="checkout-main">
+          <h3 class="checkout-main__title">Complete Your Order</h3>
+          <div class="event-banner">
+            <span class="event-banner__emoji">🎵</span>
+            <div class="event-banner__info">
+              <div class="event-banner__name">Sunset Music Festival</div>
+              <div class="event-banner__details">Central Park, NYC · Aug 15, 2026 · 7:00 PM</div>
+            </div>
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-item__label">Date</div>
+              <div class="info-item__value">August 15, 2026</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item__label">Time</div>
+              <div class="info-item__value">7:00 PM – 11:00 PM</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item__label">Venue</div>
+              <div class="info-item__value">SummerStage, Central Park</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item__label">Tickets</div>
+              <div class="info-item__value">2× General Admission</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-sidebar">
+          <div class="order-card">
+            <h4 class="order-card__title">Order Summary</h4>
+            <div class="order-row">
+              <span class="order-row--label">2× General Admission</span>
+              <span>$170.00</span>
+            </div>
+            <div class="order-row">
+              <span class="order-row--label">Service Fee</span>
+              <span>$12.50</span>
+            </div>
+          </div>
+
+          <!-- ★ THE ATMX WIDGET ★ -->
+          <div id="atmx-weather-protection"
+               data-h3-index="882a100d25fffff"
+               data-event-start="2026-08-15T19:00Z"
+               data-event-end="2026-08-15T23:00Z"
+               data-payout-amount="50.00">
+          </div>
+
+          <div class="order-card">
+            <div class="order-row order-row--total">
+              <span>Total</span>
+              <span id="order-total">$182.50</span>
+            </div>
+            <div style="height: 12px;"></div>
+            <button class="order-btn" onclick="alert('Demo only — no real purchase.')">
+              Complete Purchase
+            </button>
+            <div style="height: 8px;"></div>
+            <div class="order-note">Weather protection powered by ATMX Risk API</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Integration Code ═══ -->
+    <div class="section">
+      <div class="section__label">Integration</div>
+      <h2 class="section__title">Two Minutes to Integrate</h2>
+      <p class="section__sub">
+        Add the container div with your event data, include the script, and listen for events.
+      </p>
+
+      <div class="code-grid">
+        <div class="code-card">
+          <div class="code-card__header">
+            <span class="code-card__dot code-card__dot--red"></span>
+            <span class="code-card__dot code-card__dot--yellow"></span>
+            <span class="code-card__dot code-card__dot--green"></span>
+            <span class="code-card__label">HTML</span>
+          </div>
+          <div class="code-card__body"><pre><span class="hl-cmt">&lt;!-- Drop this into your checkout --&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">id</span>=<span class="hl-str">"atmx-weather-protection"</span>
+     <span class="hl-attr">data-h3-index</span>=<span class="hl-str">"882a100d25fffff"</span>
+     <span class="hl-attr">data-event-start</span>=<span class="hl-str">"2026-08-15T19:00Z"</span>
+     <span class="hl-attr">data-event-end</span>=<span class="hl-str">"2026-08-15T23:00Z"</span>
+     <span class="hl-attr">data-payout-amount</span>=<span class="hl-str">"50.00"</span>
+     <span class="hl-attr">data-api-key</span>=<span class="hl-str">"pk_test_..."</span><span class="hl-tag">&gt;</span>
+<span class="hl-tag">&lt;/div&gt;</span>
+
+<span class="hl-tag">&lt;script</span> <span class="hl-attr">src</span>=<span class="hl-str">"https://cdn.atmx.io/widget/v1/atmx.js"</span><span class="hl-tag">&gt;&lt;/script&gt;</span></pre>
+          </div>
+        </div>
+
+        <div class="code-card">
+          <div class="code-card__header">
+            <span class="code-card__dot code-card__dot--red"></span>
+            <span class="code-card__dot code-card__dot--yellow"></span>
+            <span class="code-card__dot code-card__dot--green"></span>
+            <span class="code-card__label">JavaScript</span>
+          </div>
+          <div class="code-card__body"><pre><span class="hl-cmt">// Listen for contract creation</span>
+<span class="hl-fn">ATMX</span>.<span class="hl-fn">on</span>(<span class="hl-str">'activated'</span>, (<span class="hl-prop">data</span>) <span class="hl-kw">=&gt;</span> {
+  console.<span class="hl-fn">log</span>(<span class="hl-str">'Contract:'</span>, <span class="hl-prop">data</span>.<span class="hl-prop">contractId</span>);
+  console.<span class="hl-fn">log</span>(<span class="hl-str">'Premium:'</span>, <span class="hl-prop">data</span>.<span class="hl-prop">premium</span>);
+  console.<span class="hl-fn">log</span>(<span class="hl-str">'Ticker:'</span>, <span class="hl-prop">data</span>.<span class="hl-prop">ticker</span>);
+
+  <span class="hl-cmt">// Store with order</span>
+  <span class="hl-prop">order</span>.<span class="hl-prop">weatherContractId</span> = <span class="hl-prop">data</span>.<span class="hl-prop">contractId</span>;
+});
+
+<span class="hl-cmt">// Or use DOM events</span>
+<span class="hl-prop">el</span>.<span class="hl-fn">addEventListener</span>(<span class="hl-str">'atmx:activated'</span>, <span class="hl-prop">e</span> <span class="hl-kw">=&gt;</span> {
+  console.<span class="hl-fn">log</span>(<span class="hl-prop">e</span>.<span class="hl-prop">detail</span>.<span class="hl-prop">contract</span>);
+});</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Theme Comparison ═══ -->
+    <div class="section">
+      <div class="section__label">Themes</div>
+      <h2 class="section__title">Light & Dark</h2>
+      <p class="section__sub">
+        Set <code style="font-family: var(--mono); background: #f0f0f5; padding: 2px 6px; border-radius: 4px; font-size: 13px;">data-theme="dark"</code> for dark checkout flows. Shadow DOM ensures zero style conflicts.
+      </p>
+
+      <div class="theme-grid">
+        <div class="theme-card theme-card--light">
+          <div class="theme-card__label">Light Theme</div>
+          <div data-atmx-widget
+               data-h3-index="882a107285fffff"
+               data-event-start="2026-07-18T18:00Z"
+               data-event-end="2026-07-18T23:00Z"
+               data-payout-amount="75.00">
+          </div>
+        </div>
+        <div class="theme-card theme-card--dark">
+          <div class="theme-card__label">Dark Theme</div>
+          <div data-atmx-widget
+               data-h3-index="882a107285fffff"
+               data-event-start="2026-07-18T18:00Z"
+               data-event-end="2026-07-18T23:00Z"
+               data-payout-amount="75.00"
+               data-theme="dark">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Live Event Log ═══ -->
+    <div class="section">
+      <div class="section__label">Events</div>
+      <h2 class="section__title">Real-Time Event Stream</h2>
+      <p class="section__sub">
+        Toggle protection on any widget above — events appear here in real time.
+        Your platform uses these to store contract IDs with orders.
+      </p>
+
+      <div class="log-card">
+        <div class="log-card__header">
+          <span class="log-card__header-dot"></span>
+          Event Log
+        </div>
+        <div id="event-log">
+          <div class="log-entry">
+            <span class="log-time">[waiting]</span> Toggle protection on a widget to see events...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="demo-footer">
+    <strong>ATMX</strong> · Weather Derivatives Infrastructure · Embeddable Widget Demo
+  </footer>
+
+  <!-- ★ Load the widget ★ -->
+  <script src="./dist/atmx-widget.js"></script>
+
+  <script>
+    var logEl = document.getElementById('event-log');
+    var isFirstLog = true;
+    var baseTotal = 182.50;
+
+    function appendLog(event, data) {
+      if (isFirstLog) {
+        logEl.innerHTML = '';
+        isFirstLog = false;
+      }
+      var time = new Date().toLocaleTimeString();
+      var dataStr = data ? ' → ' + '<span class="log-data">' + JSON.stringify(data, null, 0).slice(0, 120) + '</span>' : '';
+      var entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = '<span class="log-time">[' + time + ']</span> <span class="log-event">' + event + '</span>' + dataStr;
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    ATMX.on('ready', function(d) {
+      appendLog('atmx:ready', { probability: d.riskPrice ? d.riskPrice.risk_probability : null });
+    });
+
+    ATMX.on('activated', function(d) {
+      appendLog('atmx:activated', { contractId: d.contractId, ticker: d.ticker, premium: d.premium });
+      var totalEl = document.getElementById('order-total');
+      if (totalEl) totalEl.textContent = '$' + (baseTotal + d.premium).toFixed(2);
+    });
+
+    ATMX.on('deactivated', function() {
+      appendLog('atmx:deactivated', null);
+      var totalEl = document.getElementById('order-total');
+      if (totalEl) totalEl.textContent = '$' + baseTotal.toFixed(2);
+    });
+
+    ATMX.on('error', function(d) {
+      appendLog('atmx:error', d);
+    });
+  </script>
+
+</body>
+</html>

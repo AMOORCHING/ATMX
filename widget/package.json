@@ -1,0 +1,20 @@
+{
+  "name": "@atmx/widget",
+  "version": "0.1.0",
+  "description": "Embeddable weather protection widget — drop-in <script> tag for any checkout flow",
+  "main": "dist/atmx-widget.js",
+  "scripts": {
+    "build": "esbuild src/atmx-widget.ts --outfile=dist/atmx-widget.js --bundle --target=es2020 --format=iife",
+    "build:min": "esbuild src/atmx-widget.ts --outfile=dist/atmx-widget.min.js --bundle --minify --target=es2020 --format=iife",
+    "dev": "esbuild src/atmx-widget.ts --outfile=dist/atmx-widget.js --bundle --target=es2020 --format=iife --watch --servedir=.",
+    "demo": "npx serve . -p 5555"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  },
+  "files": [
+    "dist/atmx-widget.js",
+    "dist/atmx-widget.min.js"
+  ],
+  "license": "MIT"
+}
