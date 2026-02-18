@@ -1,0 +1,959 @@
+{
+  "generated_at": "2026-02-18T15:33:47.927810+00:00",
+  "generator": "scripts/generate_case_studies.py",
+  "data_source": "Iowa Environmental Mesonet ASOS Archive",
+  "data_source_url": "https://mesonet.agron.iastate.edu/request/download.phtml",
+  "hash_chain_algorithm": "sha256",
+  "pricing_model": "ensemble_baseline_v1",
+  "lmsr_liquidity_b": 100.0,
+  "loading_factor": 0.1,
+  "aggregation_note": "ASOS p01m is a running hourly accumulator. We take the max value per clock-hour then sum across hours.",
+  "case_studies": [
+    {
+      "id": 1,
+      "title": "Summer Concert at Prospect Park",
+      "event_name": "Prospect Park Summer Music Festival",
+      "venue": "Prospect Park Bandshell",
+      "city": "Brooklyn",
+      "state": "NY",
+      "date": "July 9, 2023",
+      "description": "An outdoor summer music festival at the Prospect Park Bandshell, one of Brooklyn's most popular venues for live outdoor performance. Summer evening thunderstorms are a perennial risk for NYC outdoor events.",
+      "ticket_price_usd": 45.0,
+      "station": "KJFK",
+      "station_name": "JFK International Airport",
+      "h3_cell": "872a103b1ffffff",
+      "local_timezone": "EDT",
+      "utc_offset_hours": -4,
+      "window_local": "4:00 PM \u2013 12:00 AM EDT",
+      "purchase_time": "2:00 PM EDT",
+      "pricing": {
+        "risk_probability": 0.15,
+        "risk_probability_pct": "15.0%",
+        "payout_usd": 50.0,
+        "premium_usd": 8.29,
+        "premium_pct_of_payout": "16.6%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-07-09T20:00:00+00:00",
+        "window_end_utc": "2023-07-10T04:00:00+00:00",
+        "threshold_mm": 10.0,
+        "observed_value_mm": 13.45,
+        "total_raw_observations": 110,
+        "hourly_readings": [
+          {
+            "hour_utc": "2023-07-09 20:00",
+            "precip_mm": 2.03
+          },
+          {
+            "hour_utc": "2023-07-09 21:00",
+            "precip_mm": 0.25
+          },
+          {
+            "hour_utc": "2023-07-09 22:00",
+            "precip_mm": 7.11
+          },
+          {
+            "hour_utc": "2023-07-10 02:00",
+            "precip_mm": 4.06
+          }
+        ]
+      },
+      "settlement": {
+        "outcome": "YES",
+        "observed_value_mm": 13.45,
+        "threshold_mm": 10.0,
+        "exceeded": true,
+        "settled_at_utc": "2023-07-10T04:30:00+00:00",
+        "settlement_time_local": "12:30 AM EDT",
+        "dispute_reason": null,
+        "payout_triggered": true,
+        "payout_amount_usd": 50.0
+      },
+      "hash_chain": {
+        "record_hash": "cb72d08eb48fb736708bcd4926ece67e9cb7f0e8e61b78cf2d6573a03be0ada8",
+        "previous_hash": null,
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "872a103b1ffffff",
+          "metric": "precipitation",
+          "threshold_mm": 10.0,
+          "unit": "mm",
+          "window_start": "2023-07-09T20:00:00+00:00",
+          "window_end": "2023-07-10T04:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KJFK",
+          "station_name": "JFK International Airport",
+          "total_raw_observations": 110,
+          "hourly_readings": [
+            {
+              "hour_utc": "2023-07-09 20:00",
+              "precip_mm": 2.03
+            },
+            {
+              "hour_utc": "2023-07-09 21:00",
+              "precip_mm": 0.25
+            },
+            {
+              "hour_utc": "2023-07-09 22:00",
+              "precip_mm": 7.11
+            },
+            {
+              "hour_utc": "2023-07-10 02:00",
+              "precip_mm": 4.06
+            }
+          ]
+        },
+        "determination": {
+          "outcome": "YES",
+          "observed_value_mm": 13.45,
+          "threshold_mm": 10.0,
+          "exceeded": true
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KJFK&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=7&day1=9&hour1=20&year2=2023&month2=7&day2=10&hour2=4"
+    },
+    {
+      "id": 2,
+      "title": "Lollapalooza at Grant Park",
+      "event_name": "Lollapalooza 2023 \u2014 Pre-Show Events",
+      "venue": "Grant Park",
+      "city": "Chicago",
+      "state": "IL",
+      "date": "July 12, 2023",
+      "description": "The build-up week of outdoor concerts and activations at Grant Park leading into Lollapalooza. Chicago's lakefront is highly exposed to mid-summer convective storms that sweep in from the Great Plains.",
+      "ticket_price_usd": 135.0,
+      "station": "KORD",
+      "station_name": "O'Hare International Airport",
+      "h3_cell": "87275934effffff",
+      "local_timezone": "CDT",
+      "utc_offset_hours": -5,
+      "window_local": "12:00 PM \u2013 10:00 PM CDT",
+      "purchase_time": "9:00 AM CDT",
+      "pricing": {
+        "risk_probability": 0.12,
+        "risk_probability_pct": "12.0%",
+        "payout_usd": 75.0,
+        "premium_usd": 9.94,
+        "premium_pct_of_payout": "13.3%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-07-12T17:00:00+00:00",
+        "window_end_utc": "2023-07-13T03:00:00+00:00",
+        "threshold_mm": 12.0,
+        "observed_value_mm": 15.23,
+        "total_raw_observations": 146,
+        "hourly_readings": [
+          {
+            "hour_utc": "2023-07-12 17:00",
+            "precip_mm": 1.52
+          },
+          {
+            "hour_utc": "2023-07-12 18:00",
+            "precip_mm": 7.87
+          },
+          {
+            "hour_utc": "2023-07-12 19:00",
+            "precip_mm": 0.51
+          },
+          {
+            "hour_utc": "2023-07-12 23:00",
+            "precip_mm": 2.79
+          },
+          {
+            "hour_utc": "2023-07-13 00:00",
+            "precip_mm": 2.54
+          }
+        ]
+      },
+      "settlement": {
+        "outcome": "YES",
+        "observed_value_mm": 15.23,
+        "threshold_mm": 12.0,
+        "exceeded": true,
+        "settled_at_utc": "2023-07-13T03:30:00+00:00",
+        "settlement_time_local": "10:30 PM CDT",
+        "dispute_reason": null,
+        "payout_triggered": true,
+        "payout_amount_usd": 75.0
+      },
+      "hash_chain": {
+        "record_hash": "a16b73e1459816285ba36dd5743f44b3be9c355333615535c57b6f5c8cbb02e0",
+        "previous_hash": "cb72d08eb48fb736708bcd4926ece67e9cb7f0e8e61b78cf2d6573a03be0ada8",
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "87275934effffff",
+          "metric": "precipitation",
+          "threshold_mm": 12.0,
+          "unit": "mm",
+          "window_start": "2023-07-12T17:00:00+00:00",
+          "window_end": "2023-07-13T03:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KORD",
+          "station_name": "O'Hare International Airport",
+          "total_raw_observations": 146,
+          "hourly_readings": [
+            {
+              "hour_utc": "2023-07-12 17:00",
+              "precip_mm": 1.52
+            },
+            {
+              "hour_utc": "2023-07-12 18:00",
+              "precip_mm": 7.87
+            },
+            {
+              "hour_utc": "2023-07-12 19:00",
+              "precip_mm": 0.51
+            },
+            {
+              "hour_utc": "2023-07-12 23:00",
+              "precip_mm": 2.79
+            },
+            {
+              "hour_utc": "2023-07-13 00:00",
+              "precip_mm": 2.54
+            }
+          ]
+        },
+        "determination": {
+          "outcome": "YES",
+          "observed_value_mm": 15.23,
+          "threshold_mm": 12.0,
+          "exceeded": true
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KORD&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=7&day1=12&hour1=17&year2=2023&month2=7&day2=13&hour2=3"
+    },
+    {
+      "id": 3,
+      "title": "Bayfront Park Jazz Night",
+      "event_name": "Miami Summer Jazz Series",
+      "venue": "Bayfront Park Amphitheater",
+      "city": "Miami",
+      "state": "FL",
+      "date": "August 17, 2023",
+      "description": "An outdoor jazz performance at Bayfront Park Amphitheater. South Florida's late-summer thunderstorms are among the most intense in the continental US, fueled by tropical moisture and sea-breeze convergence.",
+      "ticket_price_usd": 55.0,
+      "station": "KMIA",
+      "station_name": "Miami International Airport",
+      "h3_cell": "8744a1164ffffff",
+      "local_timezone": "EDT",
+      "utc_offset_hours": -4,
+      "window_local": "2:00 PM \u2013 11:00 PM EDT",
+      "purchase_time": "11:00 AM EDT",
+      "pricing": {
+        "risk_probability": 0.2,
+        "risk_probability_pct": "20.0%",
+        "payout_usd": 65.0,
+        "premium_usd": 14.36,
+        "premium_pct_of_payout": "22.1%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-08-17T18:00:00+00:00",
+        "window_end_utc": "2023-08-18T03:00:00+00:00",
+        "threshold_mm": 20.0,
+        "observed_value_mm": 86.87,
+        "total_raw_observations": 129,
+        "hourly_readings": [
+          {
+            "hour_utc": "2023-08-17 18:00",
+            "precip_mm": 6.1
+          },
+          {
+            "hour_utc": "2023-08-17 19:00",
+            "precip_mm": 14.48
+          },
+          {
+            "hour_utc": "2023-08-17 20:00",
+            "precip_mm": 40.39
+          },
+          {
+            "hour_utc": "2023-08-18 01:00",
+            "precip_mm": 19.3
+          },
+          {
+            "hour_utc": "2023-08-18 02:00",
+            "precip_mm": 6.6
+          }
+        ]
+      },
+      "settlement": {
+        "outcome": "YES",
+        "observed_value_mm": 86.87,
+        "threshold_mm": 20.0,
+        "exceeded": true,
+        "settled_at_utc": "2023-08-18T03:30:00+00:00",
+        "settlement_time_local": "11:30 PM EDT",
+        "dispute_reason": null,
+        "payout_triggered": true,
+        "payout_amount_usd": 65.0
+      },
+      "hash_chain": {
+        "record_hash": "5a24b3c9646c695ef913e4e7d56ebdc8aafe36c5b2b6e6fbf1439df72457f8ce",
+        "previous_hash": "a16b73e1459816285ba36dd5743f44b3be9c355333615535c57b6f5c8cbb02e0",
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "8744a1164ffffff",
+          "metric": "precipitation",
+          "threshold_mm": 20.0,
+          "unit": "mm",
+          "window_start": "2023-08-17T18:00:00+00:00",
+          "window_end": "2023-08-18T03:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KMIA",
+          "station_name": "Miami International Airport",
+          "total_raw_observations": 129,
+          "hourly_readings": [
+            {
+              "hour_utc": "2023-08-17 18:00",
+              "precip_mm": 6.1
+            },
+            {
+              "hour_utc": "2023-08-17 19:00",
+              "precip_mm": 14.48
+            },
+            {
+              "hour_utc": "2023-08-17 20:00",
+              "precip_mm": 40.39
+            },
+            {
+              "hour_utc": "2023-08-18 01:00",
+              "precip_mm": 19.3
+            },
+            {
+              "hour_utc": "2023-08-18 02:00",
+              "precip_mm": 6.6
+            }
+          ]
+        },
+        "determination": {
+          "outcome": "YES",
+          "observed_value_mm": 86.87,
+          "threshold_mm": 20.0,
+          "exceeded": true
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KMIA&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=8&day1=17&hour1=18&year2=2023&month2=8&day2=18&hour2=3"
+    },
+    {
+      "id": 4,
+      "title": "Atlanta Jazz Festival",
+      "event_name": "Atlanta Jazz Festival",
+      "venue": "Piedmont Park",
+      "city": "Atlanta",
+      "state": "GA",
+      "date": "April 1, 2023",
+      "description": "The Atlanta Jazz Festival at Piedmont Park \u2014 one of the largest free jazz festivals in the country. Spring in Atlanta brings warm, humid Gulf air that fuels afternoon thunderstorms.",
+      "ticket_price_usd": 0.0,
+      "station": "KATL",
+      "station_name": "Hartsfield-Jackson Atlanta Intl Airport",
+      "h3_cell": "8744c1b8affffff",
+      "local_timezone": "EDT",
+      "utc_offset_hours": -4,
+      "window_local": "8:00 AM \u2013 6:00 PM EDT",
+      "purchase_time": "7:00 AM EDT",
+      "pricing": {
+        "risk_probability": 0.15,
+        "risk_probability_pct": "15.0%",
+        "payout_usd": 55.0,
+        "premium_usd": 9.11,
+        "premium_pct_of_payout": "16.6%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-04-01T12:00:00+00:00",
+        "window_end_utc": "2023-04-01T22:00:00+00:00",
+        "threshold_mm": 10.0,
+        "observed_value_mm": 12.7,
+        "total_raw_observations": 137,
+        "hourly_readings": [
+          {
+            "hour_utc": "2023-04-01 12:00",
+            "precip_mm": 6.1
+          },
+          {
+            "hour_utc": "2023-04-01 13:00",
+            "precip_mm": 6.6
+          }
+        ]
+      },
+      "settlement": {
+        "outcome": "YES",
+        "observed_value_mm": 12.7,
+        "threshold_mm": 10.0,
+        "exceeded": true,
+        "settled_at_utc": "2023-04-01T22:30:00+00:00",
+        "settlement_time_local": "6:30 PM EDT",
+        "dispute_reason": null,
+        "payout_triggered": true,
+        "payout_amount_usd": 55.0
+      },
+      "hash_chain": {
+        "record_hash": "631b5d5d197f78d33ce3f64d5eef8211ebeeed52fac734ea9fb8169973915db1",
+        "previous_hash": "5a24b3c9646c695ef913e4e7d56ebdc8aafe36c5b2b6e6fbf1439df72457f8ce",
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "8744c1b8affffff",
+          "metric": "precipitation",
+          "threshold_mm": 10.0,
+          "unit": "mm",
+          "window_start": "2023-04-01T12:00:00+00:00",
+          "window_end": "2023-04-01T22:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KATL",
+          "station_name": "Hartsfield-Jackson Atlanta Intl Airport",
+          "total_raw_observations": 137,
+          "hourly_readings": [
+            {
+              "hour_utc": "2023-04-01 12:00",
+              "precip_mm": 6.1
+            },
+            {
+              "hour_utc": "2023-04-01 13:00",
+              "precip_mm": 6.6
+            }
+          ]
+        },
+        "determination": {
+          "outcome": "YES",
+          "observed_value_mm": 12.7,
+          "threshold_mm": 10.0,
+          "exceeded": true
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KATL&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=4&day1=1&hour1=12&year2=2023&month2=4&day2=1&hour2=22"
+    },
+    {
+      "id": 5,
+      "title": "Cinespia at Hollywood Forever",
+      "event_name": "Cinespia Outdoor Movie Screening",
+      "venue": "Hollywood Forever Cemetery",
+      "city": "Los Angeles",
+      "state": "CA",
+      "date": "January 9, 2023",
+      "description": "The popular Cinespia outdoor screening at Hollywood Forever Cemetery. January 2023 brought an extraordinary series of atmospheric rivers to Southern California, producing some of the heaviest rainfall in years.",
+      "ticket_price_usd": 22.0,
+      "station": "KLAX",
+      "station_name": "Los Angeles International Airport",
+      "h3_cell": "8729a565bffffff",
+      "local_timezone": "PST",
+      "utc_offset_hours": -8,
+      "window_local": "7:00 PM \u2013 11:00 PM PST",
+      "purchase_time": "2:00 PM PST",
+      "pricing": {
+        "risk_probability": 0.18,
+        "risk_probability_pct": "18.0%",
+        "payout_usd": 45.0,
+        "premium_usd": 8.95,
+        "premium_pct_of_payout": "19.9%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-01-10T03:00:00+00:00",
+        "window_end_utc": "2023-01-10T07:00:00+00:00",
+        "threshold_mm": 10.0,
+        "observed_value_mm": 17.52,
+        "total_raw_observations": 59,
+        "hourly_readings": [
+          {
+            "hour_utc": "2023-01-10 03:00",
+            "precip_mm": 3.3
+          },
+          {
+            "hour_utc": "2023-01-10 04:00",
+            "precip_mm": 4.06
+          },
+          {
+            "hour_utc": "2023-01-10 05:00",
+            "precip_mm": 3.05
+          },
+          {
+            "hour_utc": "2023-01-10 06:00",
+            "precip_mm": 7.11
+          }
+        ]
+      },
+      "settlement": {
+        "outcome": "YES",
+        "observed_value_mm": 17.52,
+        "threshold_mm": 10.0,
+        "exceeded": true,
+        "settled_at_utc": "2023-01-10T07:30:00+00:00",
+        "settlement_time_local": "11:30 PM PST",
+        "dispute_reason": null,
+        "payout_triggered": true,
+        "payout_amount_usd": 45.0
+      },
+      "hash_chain": {
+        "record_hash": "00987aa1ec011488e423bc91648a80bf495cce9b7d91e02b8fc585b5849a8d69",
+        "previous_hash": "631b5d5d197f78d33ce3f64d5eef8211ebeeed52fac734ea9fb8169973915db1",
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "8729a565bffffff",
+          "metric": "precipitation",
+          "threshold_mm": 10.0,
+          "unit": "mm",
+          "window_start": "2023-01-10T03:00:00+00:00",
+          "window_end": "2023-01-10T07:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KLAX",
+          "station_name": "Los Angeles International Airport",
+          "total_raw_observations": 59,
+          "hourly_readings": [
+            {
+              "hour_utc": "2023-01-10 03:00",
+              "precip_mm": 3.3
+            },
+            {
+              "hour_utc": "2023-01-10 04:00",
+              "precip_mm": 4.06
+            },
+            {
+              "hour_utc": "2023-01-10 05:00",
+              "precip_mm": 3.05
+            },
+            {
+              "hour_utc": "2023-01-10 06:00",
+              "precip_mm": 7.11
+            }
+          ]
+        },
+        "determination": {
+          "outcome": "YES",
+          "observed_value_mm": 17.52,
+          "threshold_mm": 10.0,
+          "exceeded": true
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KLAX&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=1&day1=10&hour1=3&year2=2023&month2=1&day2=10&hour2=7"
+    },
+    {
+      "id": 6,
+      "title": "Celebrate Brooklyn! at Prospect Park",
+      "event_name": "Celebrate Brooklyn! Summer Concert",
+      "venue": "Prospect Park Bandshell",
+      "city": "Brooklyn",
+      "state": "NY",
+      "date": "July 15, 2023",
+      "description": "An evening concert at the Prospect Park Bandshell, part of the Celebrate Brooklyn! performing arts festival \u2014 the city's longest-running free outdoor performing arts series.",
+      "ticket_price_usd": 45.0,
+      "station": "KJFK",
+      "station_name": "JFK International Airport",
+      "h3_cell": "872a103b1ffffff",
+      "local_timezone": "EDT",
+      "utc_offset_hours": -4,
+      "window_local": "6:00 PM \u2013 10:00 PM EDT",
+      "purchase_time": "2:00 PM EDT",
+      "pricing": {
+        "risk_probability": 0.062,
+        "risk_probability_pct": "6.2%",
+        "payout_usd": 50.0,
+        "premium_usd": 3.43,
+        "premium_pct_of_payout": "6.9%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-07-15T22:00:00+00:00",
+        "window_end_utc": "2023-07-16T02:00:00+00:00",
+        "threshold_mm": 10.0,
+        "observed_value_mm": 0,
+        "total_raw_observations": 52,
+        "hourly_readings": []
+      },
+      "settlement": {
+        "outcome": "NO",
+        "observed_value_mm": 0,
+        "threshold_mm": 10.0,
+        "exceeded": false,
+        "settled_at_utc": "2023-07-16T02:30:00+00:00",
+        "settlement_time_local": "10:30 PM EDT",
+        "dispute_reason": null,
+        "payout_triggered": false,
+        "payout_amount_usd": 0.0
+      },
+      "hash_chain": {
+        "record_hash": "fe4d4c02aa6a974d04d9e6e0b33d82615a7b1b413582950584cf616b0342b7f2",
+        "previous_hash": "00987aa1ec011488e423bc91648a80bf495cce9b7d91e02b8fc585b5849a8d69",
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "872a103b1ffffff",
+          "metric": "precipitation",
+          "threshold_mm": 10.0,
+          "unit": "mm",
+          "window_start": "2023-07-15T22:00:00+00:00",
+          "window_end": "2023-07-16T02:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KJFK",
+          "station_name": "JFK International Airport",
+          "total_raw_observations": 52,
+          "hourly_readings": []
+        },
+        "determination": {
+          "outcome": "NO",
+          "observed_value_mm": 0,
+          "threshold_mm": 10.0,
+          "exceeded": false
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KJFK&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=7&day1=15&hour1=22&year2=2023&month2=7&day2=16&hour2=2"
+    },
+    {
+      "id": 7,
+      "title": "Boston Pops Fireworks Spectacular",
+      "event_name": "Boston Pops Fireworks Spectacular",
+      "venue": "Hatch Memorial Shell, Esplanade",
+      "city": "Boston",
+      "state": "MA",
+      "date": "July 4, 2023",
+      "description": "The annual Boston Pops Fireworks Spectacular on the Charles River Esplanade \u2014 one of America's most iconic Fourth of July celebrations, drawing over 500,000 spectators. Afternoon showers tested the crowd's resolve, but the threshold wasn't reached.",
+      "ticket_price_usd": 0.0,
+      "station": "KBOS",
+      "station_name": "Boston Logan International Airport",
+      "h3_cell": "872a30296ffffff",
+      "local_timezone": "EDT",
+      "utc_offset_hours": -4,
+      "window_local": "2:00 PM \u2013 11:00 PM EDT",
+      "purchase_time": "12:00 PM EDT",
+      "pricing": {
+        "risk_probability": 0.07,
+        "risk_probability_pct": "7.0%",
+        "payout_usd": 50.0,
+        "premium_usd": 3.87,
+        "premium_pct_of_payout": "7.7%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-07-04T18:00:00+00:00",
+        "window_end_utc": "2023-07-05T03:00:00+00:00",
+        "threshold_mm": 10.0,
+        "observed_value_mm": 5.33,
+        "total_raw_observations": 130,
+        "hourly_readings": [
+          {
+            "hour_utc": "2023-07-04 19:00",
+            "precip_mm": 1.52
+          },
+          {
+            "hour_utc": "2023-07-04 20:00",
+            "precip_mm": 3.3
+          },
+          {
+            "hour_utc": "2023-07-04 21:00",
+            "precip_mm": 0.51
+          }
+        ]
+      },
+      "settlement": {
+        "outcome": "NO",
+        "observed_value_mm": 5.33,
+        "threshold_mm": 10.0,
+        "exceeded": false,
+        "settled_at_utc": "2023-07-05T03:30:00+00:00",
+        "settlement_time_local": "11:30 PM EDT",
+        "dispute_reason": null,
+        "payout_triggered": false,
+        "payout_amount_usd": 0.0
+      },
+      "hash_chain": {
+        "record_hash": "6fcc19d294131ad1bc9bf5bf69eeb636ebe9c7b5a92ddfc0d21842d8e5cb0f41",
+        "previous_hash": "fe4d4c02aa6a974d04d9e6e0b33d82615a7b1b413582950584cf616b0342b7f2",
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "872a30296ffffff",
+          "metric": "precipitation",
+          "threshold_mm": 10.0,
+          "unit": "mm",
+          "window_start": "2023-07-04T18:00:00+00:00",
+          "window_end": "2023-07-05T03:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KBOS",
+          "station_name": "Boston Logan International Airport",
+          "total_raw_observations": 130,
+          "hourly_readings": [
+            {
+              "hour_utc": "2023-07-04 19:00",
+              "precip_mm": 1.52
+            },
+            {
+              "hour_utc": "2023-07-04 20:00",
+              "precip_mm": 3.3
+            },
+            {
+              "hour_utc": "2023-07-04 21:00",
+              "precip_mm": 0.51
+            }
+          ]
+        },
+        "determination": {
+          "outcome": "NO",
+          "observed_value_mm": 5.33,
+          "threshold_mm": 10.0,
+          "exceeded": false
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KBOS&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=7&day1=4&hour1=18&year2=2023&month2=7&day2=5&hour2=3"
+    },
+    {
+      "id": 8,
+      "title": "Stern Grove Festival Concert",
+      "event_name": "Stern Grove Festival",
+      "venue": "Sigmund Stern Grove",
+      "city": "San Francisco",
+      "state": "CA",
+      "date": "September 1, 2023",
+      "description": "The historic Stern Grove Festival \u2014 San Francisco's free outdoor concert series since 1938. Despite the city's famous microclimates, September is statistically its warmest and driest month.",
+      "ticket_price_usd": 0.0,
+      "station": "KSFO",
+      "station_name": "San Francisco International Airport",
+      "h3_cell": "87283092affffff",
+      "local_timezone": "PDT",
+      "utc_offset_hours": -7,
+      "window_local": "2:00 PM \u2013 5:00 PM PDT",
+      "purchase_time": "10:00 AM PDT",
+      "pricing": {
+        "risk_probability": 0.02,
+        "risk_probability_pct": "2.0%",
+        "payout_usd": 40.0,
+        "premium_usd": 0.88,
+        "premium_pct_of_payout": "2.2%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-09-01T21:00:00+00:00",
+        "window_end_utc": "2023-09-02T00:00:00+00:00",
+        "threshold_mm": 5.0,
+        "observed_value_mm": 0,
+        "total_raw_observations": 39,
+        "hourly_readings": []
+      },
+      "settlement": {
+        "outcome": "NO",
+        "observed_value_mm": 0,
+        "threshold_mm": 5.0,
+        "exceeded": false,
+        "settled_at_utc": "2023-09-02T00:30:00+00:00",
+        "settlement_time_local": "5:30 PM PDT",
+        "dispute_reason": null,
+        "payout_triggered": false,
+        "payout_amount_usd": 0.0
+      },
+      "hash_chain": {
+        "record_hash": "eee7c69b1af36b1fecd5958efed4dc3ffb20247c32340a8ea95085547ca9b104",
+        "previous_hash": "6fcc19d294131ad1bc9bf5bf69eeb636ebe9c7b5a92ddfc0d21842d8e5cb0f41",
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "87283092affffff",
+          "metric": "precipitation",
+          "threshold_mm": 5.0,
+          "unit": "mm",
+          "window_start": "2023-09-01T21:00:00+00:00",
+          "window_end": "2023-09-02T00:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KSFO",
+          "station_name": "San Francisco International Airport",
+          "total_raw_observations": 39,
+          "hourly_readings": []
+        },
+        "determination": {
+          "outcome": "NO",
+          "observed_value_mm": 0,
+          "threshold_mm": 5.0,
+          "exceeded": false
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KSFO&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=9&day1=1&hour1=21&year2=2023&month2=9&day2=2&hour2=0"
+    },
+    {
+      "id": 9,
+      "title": "Outdoor Cinema at Gas Works Park",
+      "event_name": "Movies at the Park",
+      "venue": "Gas Works Park",
+      "city": "Seattle",
+      "state": "WA",
+      "date": "July 25, 2023",
+      "description": "An outdoor movie screening at Gas Works Park overlooking Lake Union. Seattle's dry summer season makes July the prime window for outdoor events, though marine air incursions from Puget Sound can bring unexpected drizzle.",
+      "ticket_price_usd": 15.0,
+      "station": "KSEA",
+      "station_name": "Seattle-Tacoma International Airport",
+      "h3_cell": "8728d5cd2ffffff",
+      "local_timezone": "PDT",
+      "utc_offset_hours": -7,
+      "window_local": "8:00 PM \u2013 11:00 PM PDT",
+      "purchase_time": "5:00 PM PDT",
+      "pricing": {
+        "risk_probability": 0.03,
+        "risk_probability_pct": "3.0%",
+        "payout_usd": 40.0,
+        "premium_usd": 1.33,
+        "premium_pct_of_payout": "3.3%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-07-26T03:00:00+00:00",
+        "window_end_utc": "2023-07-26T06:00:00+00:00",
+        "threshold_mm": 5.0,
+        "observed_value_mm": 0,
+        "total_raw_observations": 39,
+        "hourly_readings": []
+      },
+      "settlement": {
+        "outcome": "NO",
+        "observed_value_mm": 0,
+        "threshold_mm": 5.0,
+        "exceeded": false,
+        "settled_at_utc": "2023-07-26T06:30:00+00:00",
+        "settlement_time_local": "11:30 PM PDT",
+        "dispute_reason": null,
+        "payout_triggered": false,
+        "payout_amount_usd": 0.0
+      },
+      "hash_chain": {
+        "record_hash": "63f286debed8169270daeb6cb8be30ecfda518de48d7b3a4711397e717f4ca9b",
+        "previous_hash": "eee7c69b1af36b1fecd5958efed4dc3ffb20247c32340a8ea95085547ca9b104",
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "8728d5cd2ffffff",
+          "metric": "precipitation",
+          "threshold_mm": 5.0,
+          "unit": "mm",
+          "window_start": "2023-07-26T03:00:00+00:00",
+          "window_end": "2023-07-26T06:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KSEA",
+          "station_name": "Seattle-Tacoma International Airport",
+          "total_raw_observations": 39,
+          "hourly_readings": []
+        },
+        "determination": {
+          "outcome": "NO",
+          "observed_value_mm": 0,
+          "threshold_mm": 5.0,
+          "exceeded": false
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KSEA&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=7&day1=26&hour1=3&year2=2023&month2=7&day2=26&hour2=6"
+    },
+    {
+      "id": 10,
+      "title": "Fair Park Food Festival",
+      "event_name": "Texas Outdoor Food Festival",
+      "venue": "Fair Park",
+      "city": "Dallas",
+      "state": "TX",
+      "date": "August 10, 2023",
+      "description": "An outdoor food competition at Fair Park. August in North Texas means extreme heat but typically low precipitation \u2014 though isolated severe thunderstorms can develop rapidly along the dryline.",
+      "ticket_price_usd": 25.0,
+      "station": "KDFW",
+      "station_name": "Dallas/Fort Worth International Airport",
+      "h3_cell": "8726c861bffffff",
+      "local_timezone": "CDT",
+      "utc_offset_hours": -5,
+      "window_local": "10:00 AM \u2013 10:00 PM CDT",
+      "purchase_time": "8:00 AM CDT",
+      "pricing": {
+        "risk_probability": 0.05,
+        "risk_probability_pct": "5.0%",
+        "payout_usd": 45.0,
+        "premium_usd": 2.49,
+        "premium_pct_of_payout": "5.5%",
+        "pricing_model": "ensemble_baseline_v1",
+        "lmsr_b": 100.0,
+        "loading_factor": 0.1
+      },
+      "weather": {
+        "window_start_utc": "2023-08-10T15:00:00+00:00",
+        "window_end_utc": "2023-08-11T03:00:00+00:00",
+        "threshold_mm": 10.0,
+        "observed_value_mm": 0,
+        "total_raw_observations": 156,
+        "hourly_readings": []
+      },
+      "settlement": {
+        "outcome": "NO",
+        "observed_value_mm": 0,
+        "threshold_mm": 10.0,
+        "exceeded": false,
+        "settled_at_utc": "2023-08-11T03:30:00+00:00",
+        "settlement_time_local": "10:30 PM CDT",
+        "dispute_reason": null,
+        "payout_triggered": false,
+        "payout_amount_usd": 0.0
+      },
+      "hash_chain": {
+        "record_hash": "aae4419b48258210700d706c2710a73c5cedae0a5951de47fbd0bcf4fdf4d7ed",
+        "previous_hash": "63f286debed8169270daeb6cb8be30ecfda518de48d7b3a4711397e717f4ca9b",
+        "algorithm": "sha256"
+      },
+      "evidence_payload": {
+        "contract": {
+          "h3_cell": "8726c861bffffff",
+          "metric": "precipitation",
+          "threshold_mm": 10.0,
+          "unit": "mm",
+          "window_start": "2023-08-10T15:00:00+00:00",
+          "window_end": "2023-08-11T03:00:00+00:00"
+        },
+        "observation_summary": {
+          "station": "KDFW",
+          "station_name": "Dallas/Fort Worth International Airport",
+          "total_raw_observations": 156,
+          "hourly_readings": []
+        },
+        "determination": {
+          "outcome": "NO",
+          "observed_value_mm": 0,
+          "threshold_mm": 10.0,
+          "exceeded": false
+        }
+      },
+      "iem_verification_url": "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=KDFW&data=p01m&tz=Etc/UTC&format=comma&latlon=no&year1=2023&month1=8&day1=10&hour1=15&year2=2023&month2=8&day2=11&hour2=3"
+    }
+  ]
+}
