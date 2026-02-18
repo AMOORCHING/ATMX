@@ -56,6 +56,24 @@ services:
       redis:
         condition: service_healthy
 
+  risk-api:
+    build: ./services/risk-api
+    ports:
+      - "8001:8001"
+    environment:
+      MARKET_ENGINE_URL: http://market-engine:8080
+      SETTLEMENT_ORACLE_URL: http://settlement-oracle:8000
+      SETTLEMENT_CRON_ENABLED: "true"
+      SETTLEMENT_CRON_INTERVAL_SECONDS: "30"
+      WEBHOOK_TIMEOUT_SECONDS: "10"
+      WEBHOOK_MAX_RETRIES: "3"
+      ADMIN_SECRET: ${ADMIN_SECRET:-changeme-admin-secret}
+      BOOTSTRAP_API_KEY: ${BOOTSTRAP_API_KEY:-}
+      DEFAULT_RATE_LIMIT: "60"
+    depends_on:
+      - market-engine
+      - settlement-oracle
+
   frontend:
     build:
       context: ./frontend
