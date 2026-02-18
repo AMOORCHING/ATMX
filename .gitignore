@@ -9,3 +9,5 @@ __pycache__
 *.pyw
 *.pyz'
 frontend/node_modules
+widget/node_modules
+demos/*/node_modules
